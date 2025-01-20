@@ -13,18 +13,13 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: python:3.12.8-alpine
+      image: python:3.12-alpine
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.12'
-
-      - name: Upgrade pip and install dependencies
+      - name: Install dependencies
         run: |
           apk add --no-cache gcc musl-dev libffi-dev openssl-dev
           pip install --upgrade pip
