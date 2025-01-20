@@ -6,5 +6,5 @@ from .serializers import CompanySerializer
 
 class CompanyViewSet(ModelViewSet):
     serializer_class = CompanySerializer
-    queryset = Company.objects.all().order_by('-last_updated')
+    queryset = Company.objects.all().order_by("-last_updated")
     pagination_class = PageNumberPagination
