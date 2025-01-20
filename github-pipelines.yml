@@ -1,0 +1,12 @@
+image: python:3.12.0
+
+pipelines:
+  default:
+    - step:
+        name: Django Company API tests
+        caches:
+          - pip
+        scripts:
+          - pip install pipenv --upgrade
+          - pipenv install --system
+          - pytest api/coronavstech -s -v --durations=0

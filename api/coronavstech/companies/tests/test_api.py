@@ -9,8 +9,8 @@ from django.urls import reverse
 from companies.models import Company
 
 companies_url = reverse("companies-list")
+pytestmark = pytest.mark.django_db
 
-@pytest.mark.django_db
 class BasicComponyAPiTestCase(TestCase):
     def setUp(self):
         self.client = Client()
@@ -21,13 +21,11 @@ class BasicComponyAPiTestCase(TestCase):
 
 # =====================Test Get Companies=========================
 
-@pytest.mark.django_db
 def test_zero_companies_should_return_empty_list(client) -> None:
     response = client.get(companies_url)
     assert response.status_code == 200
     assert json.loads(response.content) == []
 
-@pytest.mark.django_db
 def test_one_companies_exists_should_succeed(client) -> None:
     test_companies = Company.objects.create(name="Amazon")
     response = client.get(companies_url)
@@ -43,14 +41,12 @@ def test_one_companies_exists_should_succeed(client) -> None:
 
 # ==============Test Post companies==============================
 
-@pytest.mark.django_db
 def test_create_company_without_arguments_should_fail(client) -> None:
     response = client.post(path=companies_url)
     assert response.status_code == 400
     assert json.loads(response.content) == {"name": ["This field is required."]}
 
 
-@pytest.mark.django_db
 def test_create_existing_company_should_fail(client) -> None:
     client.post(path=companies_url, data={"name": "king"})
     response = client.post(path=companies_url, data={"name": "king"})
@@ -58,7 +54,6 @@ def test_create_existing_company_should_fail(client) -> None:
     assert json.loads(response.content) == {"name": ["company with this name already exists."]}
 
 
-@pytest.mark.django_db
 def test_create_company_with_only_name_all_fields_should_be_succeed(client) -> None:
     response = client.post(
         path=companies_url, data={"name": "tests company name"}
@@ -71,7 +66,6 @@ def test_create_company_with_only_name_all_fields_should_be_succeed(client) -> N
     assert response_content.get("notes") == ""
 
 
-@pytest.mark.django_db
 def test_create_company_with_layoffs_status_should_succeed(client) -> None:
     response = client.post(
         path=companies_url,
@@ -83,7 +77,6 @@ def test_create_company_with_layoffs_status_should_succeed(client) -> None:
     assert response_content.get("status") == "Layoffs"
 
 
-@pytest.mark.django_db
 def test_create_company_with_wrong_status_should_fail(client) -> None:
     response = client.post(
         path=companies_url,
