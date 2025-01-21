@@ -17,7 +17,7 @@ class CompanyViewSet(ModelViewSet):
     pagination_class = PageNumberPagination
 
 
-@api_view(http_method_names=['POST'])
+@api_view(http_method_names=["POST"])
 def send_company_email(request: Request) -> Response:
     """
     Send email with request payload
@@ -30,7 +30,7 @@ def send_company_email(request: Request) -> Response:
     if not subject or not message:
         return Response(
             {"status": "error", "info": "Subject and message are required"},
-            status=status.HTTP_400_BAD_REQUEST
+            status=status.HTTP_400_BAD_REQUEST,
         )
 
     try:
@@ -40,6 +40,12 @@ def send_company_email(request: Request) -> Response:
             from_email=settings.EMAIL_HOST_USER,
             recipient_list=["swistechlayoffs@gmail.com"],
         )
-        return Response({"status": "success", "info": "email sent successfully"}, status=status.HTTP_200_OK)
+        return Response(
+            {"status": "success", "info": "email sent successfully"},
+            status=status.HTTP_200_OK,
+        )
     except Exception as e:
-        return Response({"status": "error", "info": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response(
+            {"status": "error", "info": str(e)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )

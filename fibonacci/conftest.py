@@ -21,6 +21,7 @@ class PerformanceException(Exception):
     def __str__(self) -> str:
         return f"Performance test failed runtime: {self.runtime.total_seconds()}, limit: {self.limit.total_seconds()}"
 
+
 @pytest.fixture
 def track_performance():
     def run__function_and_validate_runtime(method: Callable, runtime_limit=timedelta(seconds=2), *args, **kwargs):
@@ -36,4 +37,3 @@ def track_performance():
         return result
 
     return run__function_and_validate_runtime
-

@@ -1,4 +1,6 @@
 import json
+from typing import List
+
 import pytest
 from unittest import TestCase
 
@@ -10,6 +12,7 @@ from companies.models import Company
 
 companies_url = reverse("companies-list")
 pytestmark = pytest.mark.django_db
+
 
 class BasicComponyAPiTestCase(TestCase):
     def setUp(self):
@@ -41,6 +44,8 @@ def test_one_companies_exists_should_succeed(client, amazon) -> None:
     assert response_content.get("application_link") == ""
     assert response_content.get("notes") == ""
     amazon.delete()
+
+
 # ===============End Test Get Companies==========================
 
 
@@ -55,13 +60,13 @@ def test_create_existing_company_should_fail(client) -> None:
     client.post(path=companies_url, data={"name": "king"})
     response = client.post(path=companies_url, data={"name": "king"})
     assert response.status_code == 400
-    assert json.loads(response.content) == {"name": ["company with this name already exists."]}
+    assert json.loads(response.content) == {
+        "name": ["company with this name already exists."]
+    }
 
 
 def test_create_company_with_only_name_all_fields_should_be_succeed(client) -> None:
-    response = client.post(
-        path=companies_url, data={"name": "tests company name"}
-    )
+    response = client.post(path=companies_url, data={"name": "tests company name"})
     assert response.status_code == 201
     response_content = json.loads(response.content)
     assert response_content.get("name") == "tests company name"
@@ -89,8 +94,9 @@ def test_create_company_with_wrong_status_should_fail(client) -> None:
     assert response.status_code == 400
     assert "WrongStatus" in str(response.content)
     assert "is not a valid choice" in str(response.content)
-# ==============End Test Post companies==============================
 
+
+# ==============End Test Post companies==============================
 
 
 @pytest.mark.xfail
@@ -139,24 +145,35 @@ def test_logged_info_level(caplog) -> None:
 
 
 # ==================Learn about fixture tests=========================
+@pytest.fixture
+def companies(request, company) -> List[Company]:
+    companies = []
+    names = request.param
+    for name in names:
+        companies.append(company(name=name))
+    return companies
+
+
 @pytest.fixture()
 def company(**kwargs):
     def _company_factory(**kwargs) -> Company:
         company_name = kwargs.pop("name", "Test Company INC")
         return Company.objects.create(name=company_name, **kwargs)
-
     return _company_factory
 
 
-def test_multiple_companies_exists_should_succeed(client, company) -> None:
-    Tiktok: Company = company(name="Tiktok")
-    twitch: Company = company(name="twitch")
-    test_company: Company = company()
-    company_names = {twitch.name, Tiktok.name, test_company.name}
+@pytest.mark.parametrize(
+    "companies",
+    [["twitch.name", "Tiktok.name", "test_company.name"], ["Facebook", "Instagram"]],
+    ids=["3 T companies", "zuckerberg's companies"],
+    indirect=True,
+)
+def test_multiple_companies_exists_should_succeed(client, companies) -> None:
+    company_names = set(map(lambda x: x.name, companies))
+    print(company_names)
     response_companies = client.get(companies_url).json()
     assert len(company_names) == len(response_companies)
     response_companies_names = set(
         map(lambda company: company.get("name"), response_companies)
     )
     assert company_names == response_companies_names
-
