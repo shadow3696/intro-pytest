@@ -24,7 +24,10 @@ from conftest import time_tracker
 @pytest.mark.parametrize(
     "n,excepted",
     [
-        (40, 102334155),
+        (0, 0),
+        (10, 55),
+        (20, 6765),
+        (30, 832040),
     ],
 )
 def test_cached(time_tracker, fib_func: Callable[[int], int], n: int, excepted: int) -> None:

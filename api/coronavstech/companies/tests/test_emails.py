@@ -24,7 +24,7 @@ def test_send_email_should_succeed(mailoutbox, settings) -> None:
 
 
 def test_send_email_without_arguments_should_send_empty_email(client) -> None:
-    with patch("django.core.mail.send_mail") as mocked_send_mail_function:
+    with patch("companies.views.send_mail") as mocked_send_mail_function:
         mocked_send_mail_function.return_value = None
 
         response = client.post(

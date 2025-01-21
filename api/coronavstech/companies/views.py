@@ -28,7 +28,10 @@ def send_company_email(request: Request) -> Response:
     message = request.data.get("message", "Default Message")
 
     if not subject or not message:
-        return Response({"status": "error", "info": "Subject and message are required"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"status": "error", "info": "Subject and message are required"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
     try:
         send_mail(
