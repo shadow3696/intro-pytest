@@ -29,5 +29,10 @@ jobs:
       - name: Set Django settings module
         run: export DJANGO_SETTINGS_MODULE="coronavstech.settings"
 
-      - name: Run tests
-        run: pytest api/coronavstech -s -v --durations=0
+      - name: Run tests api
+        run: pytest api/cor
+
+      - name: Run tests fib
+        run: pytest fibonacci -s -v --durations=0
+
+
