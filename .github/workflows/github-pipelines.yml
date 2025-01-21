@@ -33,5 +33,5 @@ jobs:
         run: pytest fibonacci -s -v --durations=0
 
       - name: Run app companies test
-        run: pytest companies/tests -s -v --durations=0
+        run: pytest api/coronavstech/companies/tests -s -v --durations=0
 
