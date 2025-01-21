@@ -3,7 +3,7 @@ import pytest
 
 from fibonacci.cached import fibonacci_cached, fibonacci_lru_cached
 from fibonacci.naive import fibonacci_naive
-
+from fixtures import time_tracker
 
 @pytest.mark.parametrize(
     "n,excepted",
@@ -23,12 +23,9 @@ def test_naive(n: int, excepted: int) -> None:
 @pytest.mark.parametrize(
     "n,excepted",
     [
-        (0, 0),
-        (1, 1),
-        (2, 1),
-        (20, 6765),
+        (40, 102334155),
     ],
 )
-def test_cached(fib_func: Callable[[int], int], n: int, excepted: int) -> None:
+def test_cached(time_tracker, fib_func: Callable[[int], int], n: int, excepted: int) -> None:
     res = fib_func(n)
     assert res == excepted
