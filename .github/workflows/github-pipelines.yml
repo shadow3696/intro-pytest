@@ -32,4 +32,6 @@ jobs:
       - name: Run tests fib
         run: pytest fibonacci -s -v --durations=0
 
+      - name: Run app companies test
+        run: pytest companies/tests -s -v durations=0
 
