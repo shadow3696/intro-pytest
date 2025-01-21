@@ -7,6 +7,7 @@
 node_modules/
 dist/
 
+db.sqlite3
 # Compiled Java class files
 *.class
 
